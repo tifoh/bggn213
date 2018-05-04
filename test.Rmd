@@ -1,0 +1,31 @@
+---
+title: "Class8"
+author: "Yuansheng Zhou"
+date: "4/26/2018"
+output: 
+  html_document: 
+    keep_md: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+tmp <- c(rnorm(30,-3), rnorm(30,3))
+x <- cbind(x=tmp, y=rev(tmp))
+#plot(x)
+cl <- kmeans(x, centers=5, nstart=20)
+plot(x, col = cl$cluster)
+```
+```{r}
+dist_matrix <- dist(x) 
+hc <- hclust(d = dist_matrix)
+plot(hc)
+abline(h=6, col="red")
+cutree(hc, h=6) 
+```
+
+
+
+
