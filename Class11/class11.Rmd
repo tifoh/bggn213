@@ -1,0 +1,34 @@
+---
+title: "class11"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+``` 
+
+```{r}
+Data <- read.csv('Data Export Summary.csv')
+Data$Proteins[1]/Data$Total[1]
+```
+```{r}
+library(bio3d)
+pdb <- read.pdb("1hsg")
+ str(pdb$atom)
+ ca.inds <- atom.select(pdb, "calpha")
+cab.inds <- atom.select(pdb, elety=c("CA","CB"), chain="A",
+resno=10:20)
+```
+```{r}
+ids <- c("1TND_B","1AGR_A","1TAG_A","1GG2_A","1KJY_A","4G5Q_A")
+files <- get.pdb(ids, split = TRUE)
+pdbs <- pdbaln(files, fit = TRUE)
+pdbs
+```
+
+```{r}
+aa <- get.seq("1ake_A")
+b <- blast.pdb(aa)
+hits <- plot(b)
+```
+
