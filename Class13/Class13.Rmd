@@ -1,0 +1,27 @@
+---
+title: "Class13"
+author: "Yuansheng Zhou"
+date: "5/16/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+sample <- read.csv("sample.csv")
+table(sample$Genotype..forward.strand.)
+```
+```{r}
+install.packages("seqinr")
+install.packages("gtools")
+ library(seqinr)
+library(gtools)
+ phred <- asc( s2c("DDDDCDEDCDDDDBBDDDCC@") ) - 33
+ phred
+## D D D D C D E D C D D D D B B D D D C C @
+## 35 35 35 35 34 35 36 35 34 35 35 35 35 33 33 35 35 35 34 34 31
+ prob <- 10**(-phred/10)
+```
+
