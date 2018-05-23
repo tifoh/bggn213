@@ -1,0 +1,82 @@
+---
+title: "Class12"
+author: "Yuansheng Zhou"
+date: "5/10/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(bio3d)
+file.name <- get.pdb("1hsg")
+hiv <- read.pdb(file.name)
+hiv
+ca.inds <- atom.select(hiv, resid = "HOH")
+ca.inds$atom
+```
+
+```{r}
+prot <- trim.pdb(hiv, "protein")
+lig <- trim.pdb(hiv, "ligand")
+write.pdb(prot, file="1hsg_protein.pdb")
+write.pdb(lig, "1hsg_ligand.pdb")
+```
+
+```{r}
+library(bio3d)
+res <- read.pdb("all.pdbqt", multi=TRUE)
+write.pdb(res, "results.pdb")
+```
+
+```{r}
+# res <- read.pdb("all.pdbqt", multi=TRUE)
+ori <- read.pdb("1hsg_ligand.pdb")
+rmsd(ori, res)
+
+
+```
+
+```{r}
+a <- atom.select(ori,'noh') 
+a
+```
+```{r}
+aa <- get.seq("P69441")
+# Blast or hmmer search
+b <- blast.pdb(aa)
+## Searching ... please wait (updates every 5 seconds) RID = ZM7GP50C014
+## .
+## Reporting 209 hits
+hits <- plot(b)
+```
+
+```{r}
+# Fetch PDBs
+files <- get.pdb(hits$pdb.id, path="pdbs", split=TRUE, gzip=TRUE)
+```
+```{r}
+# Align & superimpose structures
+pdbs <- pdbaln(files, fit=TRUE)
+```
+
+```{r}
+# Perform PCA & plot the results
+pc.xray <- pca(pdbs)
+plot(pc.xray)
+# Calculate RMSD
+rd <- rmsd(pdbs)
+# Structure-based clustering
+hc.rd <- hclust(dist(rd))
+grps.rd <- cutree(hc.rd, k=3)
+plot(pc.xray, 1:2, col="grey50", bg=grps.rd, pch=21, cex=1)
+```
+
+```{r}
+# Visualize first principal component
+mktrj(pc.xray, pc=1, file="pc_1.pdb")
+```
+
+
